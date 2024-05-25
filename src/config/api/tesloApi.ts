@@ -1,5 +1,4 @@
 import {Platform} from 'react-native';
-
 import axios from 'axios';
 import {STAGE, API_URL_ANDROID, API_URL_IOS, API_URL as PROD_URL} from '@env';
 
@@ -11,5 +10,10 @@ export const API_URL =
     : API_URL_ANDROID;
 
 const tesloApi = axios.create({
-  baseURL: 'https://',
+  baseURL: API_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
 });
+
+export {tesloApi};
