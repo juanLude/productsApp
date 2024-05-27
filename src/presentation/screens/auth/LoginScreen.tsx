@@ -1,28 +1,41 @@
+/* eslint-disable curly */
 /* eslint-disable react/react-in-jsx-scope */
 /* eslint-disable react-native/no-inline-styles */
 import {Button, Input, Layout, Text} from '@ui-kitten/components';
-import {useWindowDimensions} from 'react-native';
+import {Alert, useWindowDimensions} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import {MyIcon} from '../../components/ui/MyIcon';
 import {StackScreenProps} from '@react-navigation/stack';
 import {RootStackParams} from '../../navigation/StackNavigator';
 
 import {useState} from 'react';
-import {API_URL, STAGE} from '@env';
+import {useAuthStore} from '../../store/auth/useAuthStore';
 
 interface Props extends StackScreenProps<RootStackParams, 'LoginScreen'> {}
 
 export const LoginScreen = ({navigation}: Props) => {
+  const {login} = useAuthStore();
+  const [isPosting, setIsPosting] = useState(false);
   const [form, setForm] = useState({
     email: '',
     password: '',
   });
 
   const {height} = useWindowDimensions();
-  console.log({apiUrl: API_URL, stage: STAGE});
-  const onLogin = async()=>{
-    
-  }
+
+  const onLogin = async () => {
+    if (form.email.length === 0 || form.password.length === 0) {
+      return;
+    }
+    setIsPosting(true);
+    const wasSuccessful = await login(form.email, form.password);
+    setIsPosting(false);
+
+    if (wasSuccessful) return;
+
+    Alert.alert('Error', 'Usuario o contraseña incorrectos');
+  };
+
   return (
     <Layout style={{flex: 1}}>
       <ScrollView style={{marginHorizontal: 40}}>
@@ -60,7 +73,9 @@ export const LoginScreen = ({navigation}: Props) => {
         {/* Button */}
         <Layout>
           <Button
-            accessoryRight={<MyIcon name="arrow-forward-outline" white />}>
+            disabled={isPosting}
+            accessoryRight={<MyIcon name="arrow-forward-outline" white />}
+            onPress={onLogin}>
             Ingresar
           </Button>
         </Layout>
