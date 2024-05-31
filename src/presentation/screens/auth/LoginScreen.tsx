@@ -10,6 +10,7 @@ import {RootStackParams} from '../../navigation/StackNavigator';
 
 import {useState} from 'react';
 import {useAuthStore} from '../../store/auth/useAuthStore';
+import {API_URL, STAGE} from '@env';
 
 interface Props extends StackScreenProps<RootStackParams, 'LoginScreen'> {}
 
@@ -22,6 +23,7 @@ export const LoginScreen = ({navigation}: Props) => {
   });
 
   const {height} = useWindowDimensions();
+  console.log({apiURL: API_URL, stage: STAGE});
 
   const onLogin = async () => {
     if (form.email.length === 0 || form.password.length === 0) {
