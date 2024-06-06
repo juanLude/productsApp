@@ -8,6 +8,7 @@ export class StorageAdapter {
       return null;
     }
   }
+
   static async setItem(key: string, value: string): Promise<void> {
     try {
       await AsyncStorage.setItem(key, value);
@@ -15,10 +16,12 @@ export class StorageAdapter {
       throw new Error(`Error setting item ${key} ${value}`);
     }
   }
+
   static async removeItem(key: string): Promise<void> {
     try {
       await AsyncStorage.removeItem(key);
     } catch (error) {
+      console.log(error);
       throw new Error(`Error removing item ${key}`);
     }
   }
